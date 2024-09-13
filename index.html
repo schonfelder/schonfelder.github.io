@@ -1,1 +1,130 @@
-hello World
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProtteP</title>
+    <style>	
+        body {
+            font-family: Shred, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .banner {
+            background-color: #000000;
+            color:rgb(254, 229, 2);
+            padding: 50px;
+            text-align: center;
+        }
+        .container {
+            padding: 20px;
+            margin: 0 auto;
+            width: 70%; /* This will leave 15% whitespace on both sides */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #fbe2be;
+            cursor: pointer;
+        }
+        th.sort-asc::after {
+            content: " 🔼";
+        }
+        th.sort-desc::after {
+            content: " 🔽";
+        }
+    </style>
+</head>
+<body>
+
+    <div class="banner">
+        <h1>ProtteP</h1>
+    </div>
+
+    <div class="container">
+        <table id="productTable">
+            <thead>
+                <tr>
+                    <th onclick="sortTable(0)">Product ID</th>
+                    <th onclick="sortTable(1)">Name</th>
+                    <th onclick="sortTable(2)">Category</th>
+                    <th onclick="sortTable(3)">Price</th>
+                    <th onclick="sortTable(4)">Stock</th>
+                    <th onclick="sortTable(5)">Description</th>
+                    <th onclick="sortTable(6)">Supplier</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Product A</td>
+                    <td>Category 1</td>
+                    <td>10.00</td>
+                    <td>50</td>
+                    <td>This is a sample description.</td>
+                    <td>Supplier X</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Product B</td>
+                    <td>Category 2</td>
+                    <td>20.00</td>
+                    <td>30</td>
+                    <td>This is another sample description.</td>
+                    <td>Supplier Y</td>
+                </tr>
+                <!-- Add more rows as needed -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function sortTable(columnIndex) {
+            var table = document.getElementById("productTable");
+            var rows = Array.from(table.rows).slice(1); // Get all rows except the header
+            var isNumeric = !isNaN(rows[0].cells[columnIndex].innerText.trim());
+            var ascending = table.rows[0].cells[columnIndex].classList.contains('sort-asc');
+
+            // Remove sorting indicators from all headers
+            for (let th of table.rows[0].cells) {
+                th.classList.remove('sort-asc', 'sort-desc');
+            }
+
+            rows.sort(function (rowA, rowB) {
+                var cellA = rowA.cells[columnIndex].innerText.trim();
+                var cellB = rowB.cells[columnIndex].innerText.trim();
+
+                if (isNumeric) {
+                    cellA = parseFloat(cellA);
+                    cellB = parseFloat(cellB);
+                }
+
+                if (ascending) {
+                    return cellA > cellB ? -1 : cellA < cellB ? 1 : 0;
+                } else {
+                    return cellA < cellB ? -1 : cellA > cellB ? 1 : 0;
+                }
+            });
+
+            table.tBodies[0].append(...rows);
+
+            // Toggle the sort direction and set sorting indicator
+            if (ascending) {
+                table.rows[0].cells[columnIndex].classList.add('sort-desc');
+            } else {
+                table.rows[0].cells[columnIndex].classList.add('sort-asc');
+            }
+        }
+    </script>
+
+</body>
+</html>
